@@ -1,0 +1,11 @@
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\bin\Debug\net6.0\MedicalSimulation.deps.json
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\bin\Debug\net6.0\MedicalSimulation.dll
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\bin\Debug\net6.0\ref\MedicalSimulation.dll
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\bin\Debug\net6.0\MedicalSimulation.pdb
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.AssemblyInfoInputs.cache
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.AssemblyInfo.cs
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.csproj.CoreCompileInputs.cache
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.dll
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\ref\MedicalSimulation.dll
+C:\Users\Firmz\Desktop\MastersProject\MedicalSimulation\obj\Debug\net6.0\MedicalSimulation.pdb

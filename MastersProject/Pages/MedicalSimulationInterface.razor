@@ -1,0 +1,136 @@
+﻿@page "/"
+@using MedicalSimulation
+@using Blazorise
+<h3>MedicalSimulationInterface</h3>
+@if (LastSubmitResult != null)
+{
+  <h2>
+    Last submit status: @LastSubmitResult
+  </h2>
+}
+<EditForm Model=@input OnValidSubmit=@ValidFormSubmitted OnInvalidSubmit=@InvalidFormSubmitted>
+	<!--Integer values -->
+    <div>
+        <label for="minWorkers">Minimum Workers</label>
+        <InputNumber @bind-Value="input.minWorkers" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="maxWorkers">Maximum Workers</label>
+        <InputNumber @bind-Value="input.maxWorkers" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="deskWorkers">Number of Desk Workers</label>
+        <InputNumber @bind-Value="input.deskWorkers" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="numberOfPatients">Total Number of Patients</label>
+        <InputNumber @bind-Value="input.numberOfPatients" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="numberOfRooms">Total Number of Rooms with Patients</label>
+        <InputNumber @bind-Value="input.numberOfRooms" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+
+    <!--Decimal values -->
+    <div>
+        <label for="timeBetweenRooms">Travel Time between rooms</label>
+        <InputNumber @bind-Value="input.timeBetweenRooms" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="patientCareMaximumTime">Minimum Patient Care Time</label>
+        <InputNumber @bind-Value="input.patientCareMinimumTime" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="patientCareMinimumTime">Maximum Patient Care Time</label>
+
+
+        <InputNumber @bind-Value="input.patientCareMaximumTime" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <div>
+        <label for="supervisorRatio">Supervisor Ratio</label>
+        <InputNumber @bind-Value="input.supervisorRatio" ParsingErrorMessage="Must be a decimal value" />
+    </div>
+    <input type="submit" class="btn btn-primary" value="Run Simulation" onclick="HandleSubmit"/>
+</EditForm>
+
+
+<DataGrid TItem="MedicalSummary"
+            Data="@medicalSummaries"
+            Responsive
+            ShowPager
+            ShowPageSizes
+            Groupable
+            Filterable
+            FilterMethod="DataGridFilterMethod.StartsWith"
+            PagerPosition="DataGridPagerPosition.TopAndBottom"
+            PagerOptions="new(){ ButtonSize=Blazorise.Size.Small }">
+    <DataGridCommandColumn />
+    <DataGridColumn Field="@nameof(MedicalSummary.simulationNumber)" Caption="Simulation Number" Editable Groupable Grouping />
+    <DataGridColumn Field="@nameof(MedicalSummary.workerNumber)" Caption="WorkerId" Editable />
+    <DataGridColumn Field="@nameof(MedicalSummary.minRoundTime)" Caption="Minimum Round Time" Editable />
+    <DataGridColumn Field="@nameof(MedicalSummary.averageRountTime)" Caption="Average Round Time" Editable />
+    <DataGridColumn Field="@nameof(MedicalSummary.maxRoundTime)" Caption="Maximum Round Time" Editable />
+</DataGrid>
+
+
+
+@code {
+    string LastSubmitResult;
+    public MedicalSimulationInput input = new MedicalSimulationInput();
+    public MedicalSimulationData? medicalSimulationData;
+
+    [Inject]
+    public MedicalSimulationService medicalSimulationService { get; set; } = default!;
+
+    public InputMedicalSimulationData? inputMedicalSimulationData;
+    public List<MedicalSummary>? medicalSummaries;
+
+    public class MedicalSimulationInput
+    {
+        public int minWorkers, maxWorkers, deskWorkers, numberOfPatients, numberOfRooms;
+        public double timeBetweenRooms, patientCareMaximumTime, patientCareMinimumTime,supervisorRatio;
+    }
+
+    void ValidFormSubmitted(EditContext editContext)
+    {
+        LastSubmitResult = "Starting Simulation";
+        inputMedicalSimulationData = new InputMedicalSimulationData(input.minWorkers, input.maxWorkers, input.deskWorkers, input.numberOfPatients, input.numberOfRooms, input.supervisorRatio, input.timeBetweenRooms, input.patientCareMaximumTime, input.patientCareMinimumTime);
+        medicalSimulationData = medicalSimulationService.SimulateMedicalFloor(inputMedicalSimulationData);
+
+        if (medicalSimulationData == null)
+        {
+            LastSubmitResult = "Failed To simulate";
+            return;
+        }
+        medicalSummaries = medicalSummaries ?? new List<MedicalSummary>();
+        medicalSummaries.Clear();
+
+        var outputsPerSimulation = medicalSimulationService.SplitList(medicalSimulationData.Outputs,500);
+        Console.WriteLine(outputsPerSimulation.Count);
+        foreach (var item in outputsPerSimulation.Select((value, i) => ( value, i )))
+        {
+            var allOutputsofSingleSimulation = item.value.SelectMany(x=>x).ToList();
+            var groupedWorkers = allOutputsofSingleSimulation.GroupBy(x => x.WorkerId);
+            medicalSummaries.AddRange(groupedWorkers.Select(x => new MedicalSummary()
+            {
+                simulationNumber = item.i,
+                averageRountTime = x.Average(a => a.timePerRound),
+                maxRoundTime = x.Max(a => a.timePerRound),
+                minRoundTime = x.Min(a => a.timePerRound),
+                workerNumber = x.Key
+            }));
+        }
+        Console.WriteLine(medicalSummaries.Count);
+
+    }
+
+    void InvalidFormSubmitted(EditContext editContext)
+    {
+        LastSubmitResult = "OnInvalidSubmit was executed";
+    }
+    public class MedicalSummary
+    {
+        public int workerNumber,simulationNumber;
+        public double averageRountTime, maxRoundTime, minRoundTime;
+    }
+}

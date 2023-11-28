@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "PTuKx2LDvD2abcLnI4PePCKfdDLs5ln/KgunY4FYImHBWocsHRwRcxv1JGCl3rQpQLucZ/g/eMDUM+R//RBqnQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Firmz\\Desktop\\MastersProject\\MedicalSimulation\\MedicalSimulation.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Firmz\\.nuget\\packages\\fluentvalidation\\11.7.1\\fluentvalidation.11.7.1.nupkg.sha512",
+    "C:\\Users\\Firmz\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\Firmz\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.0\\microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
